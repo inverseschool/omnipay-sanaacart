@@ -1,6 +1,6 @@
 <?php
 
-namespace Omnipay\Saman\Message;
+namespace Omnipay\SanaaCart\Message;
 
 use Omnipay\Common\Exception\InvalidRequestException;
 
@@ -26,12 +26,8 @@ class VerifyOrderRequest extends AbstractRequest
      */
     public function getData():array
     {
-        // Validate required parameters before return data
-        $this->validate('transactionReference');
-
         return [
-            'RefNum' => $this->getTransactionReference(),
-            'TerminalNumber' => $this->getTerminalId(),
+            'transactionCode' => $this->getTransactionReference()
         ];
     }
 
@@ -41,7 +37,7 @@ class VerifyOrderRequest extends AbstractRequest
      */
     protected function createUri(string $endpoint)
     {
-        return $endpoint . '/verifyTxnRandomSessionkey/ipg/VerifyTransaction';
+        return $endpoint . '/api/cpg/confirm';
     }
 
     /**

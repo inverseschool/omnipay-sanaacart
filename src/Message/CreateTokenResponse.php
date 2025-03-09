@@ -1,7 +1,7 @@
 <?php
 
 
-namespace Omnipay\Saman\Message;
+namespace Omnipay\SanaaCart\Message;
 
 use Omnipay\Common\Message\RedirectResponseInterface;
 
@@ -13,34 +13,23 @@ class CreateTokenResponse extends AbstractResponse implements RedirectResponseIn
     /**
      * @return bool
      */
-    public function isSuccessful()
+    public function isSuccessful(): bool
     {
 
-        return (int)$this->getHttpStatus() === 200 && (int)$this->getCode() === 1;
-    }
-
-    /**
-     * @return bool
-     */
-    public function isRedirect()
-    {
-        return (int)$this->getCode() === 1 &&
-            isset($this->data['token']) &&
-            !empty($this->data['token']);
-    }
-
-    /**
-     * @inheritDoc
-     */
-    public function getRedirectUrl()
-    {
-        /** @var CreateTokenRequest $request */
-        $request = $this->request;
-        return sprintf('%s/OnlinePG/SendToken?token=%s', $request->getEndpoint(), $this->getTransactionReference());
+        return (int)$this->getHttpStatus() === 200 && !empty($this->getTransactionReference());
     }
 
     public function getTransactionReference()
     {
-        return $this->data['token'];
+        return $this->data['TransactionCode'];
+    }
+    public function getRedirectUrl()
+    {
+        return $this->data['paymentUrl'];
+    }
+
+    public function isRedirect(): bool
+    {
+        return !is_null($this->data['paymentUrl']);
     }
 }

@@ -1,6 +1,6 @@
 <?php
 
-namespace Omnipay\Saman\Message;
+namespace Omnipay\SanaaCart\Message;
 
 use Omnipay\Common\Exception\InvalidRequestException;
 
@@ -12,7 +12,7 @@ class CreateTokenRequest extends AbstractRequest
     /**
      * @inheritDoc
      */
-    protected function getHttpMethod()
+    protected function getHttpMethod(): string
     {
         return 'POST';
     }
@@ -24,35 +24,37 @@ class CreateTokenRequest extends AbstractRequest
      * @return mixed
      * @throws InvalidRequestException
      */
-    public function getData():array
+    public function getData(): array
     {
         // Validate required parameters before return data
-        $this->validate('terminalId', 'amount', 'returnUrl', 'transactionId');
+        $this->validate('amount', 'orderId');
 
         return [
-            'action' =>"token",
-            'TerminalId' => $this->getTerminalId(),
-            'Amount' => $this->getAmount(),
-            'ResNum' => $this->getTransactionId(),
-            'RedirectUrl' => $this->getReturnUrl(),
-            'CellNumber' => $this->getCellNumber(),
+            'orderId' => $this->getOrderId(),
+            'amount' => $this->getAmount(),
+            'callbackUrl' => $this->getCallBackUrl()
         ];
+    }
+
+    public function getTerminalId(): ?string
+    {
+        return $this->getParameter('terminalId');
     }
 
     /**
      * @param string $endpoint
      * @return string
      */
-    protected function createUri(string $endpoint)
+    protected function createUri(string $endpoint): string
     {
-        return $endpoint . '/onlinepg/onlinepg';
+        return $endpoint . '/api/cpg/pay';
     }
 
     /**
      * @param array $data
      * @return CreateTokenResponse
      */
-    protected function createResponse(array $data)
+    protected function createResponse(array $data): CreateTokenResponse
     {
         return new CreateTokenResponse($this, $data);
     }

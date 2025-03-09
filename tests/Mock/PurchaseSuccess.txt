@@ -9,4 +9,4 @@ cache-control: private, must-revalidate
 pragma: no-cache
 expires: -1
 
-{"status":1,"token":"2c3c1fefac5a48geb9f9be7e445dd9b2"}
+{"TransactionCode": "259b47f5-c273-4a8a-8a4a-b7e58bbde539", "paymentUrl": "https://cpg.saanacart.ir/payment/pay/259b47f5-c273-4a8a-8a4a-b7e58bbde539"}

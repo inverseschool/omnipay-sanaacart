@@ -1,6 +1,6 @@
 <?php
 
-namespace Omnipay\Saman\Message;
+namespace Omnipay\SanaaCart\Message;
 
 /**
  * Class VerifyOrderResponse
@@ -11,19 +11,17 @@ class VerifyOrderResponse extends AbstractResponse
     /**
      * @inheritDoc
      */
-    public function isSuccessful()
+    public function isSuccessful(): bool
     {
-        return $this->getHttpStatus() === 200
-            && (int)$this->getResultCode() >= 0
-            && (int)$this->getAffectiveAmount() === (int)$this->getOriginalAmount();
+        return $this->getHttpStatus() === 200 && (int)$this->getResultCode() === 1;
     }
 
     /**
      * @inheritDoc
      */
-    public function isCancelled()
+    public function isCancelled(): bool
     {
-        return $this->getHttpStatus() === 200 && (int)$this->getResultCode() !== 0;
+        return $this->getHttpStatus() === 200 && (int)$this->getResultCode() !== 1;
     }
 
     /**
@@ -31,23 +29,6 @@ class VerifyOrderResponse extends AbstractResponse
      */
     public function getTransactionReference(): ?string
     {
-        return $this->data['RefNum'];
-    }
-
-    /**
-     * The original amount
-     */
-    public function getOriginalAmount(): ?string
-    {
-        // NOTE: "OrginalAmount" has a typo! this is exactly the same parameter which saman ipg returns!!
-        return $this->data['OrginalAmount'];
-    }
-
-    /**
-     * The actual paid amount
-     */
-    public function getAffectiveAmount(): ?string
-    {
-        return $this->data['AffectiveAmount'];
+        return $this->data['rrn'];
     }
 }

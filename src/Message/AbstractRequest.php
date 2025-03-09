@@ -1,6 +1,6 @@
 <?php
 
-namespace Omnipay\Saman\Message;
+namespace Omnipay\SanaaCart\Message;
 
 use Exception;
 use Omnipay\Common\Exception\InvalidResponseException;
@@ -17,7 +17,7 @@ abstract class AbstractRequest extends \Omnipay\Common\Message\AbstractRequest
      *
      * @var string URL
      */
-    protected $liveEndpoint = 'https://sep.shaparak.ir';
+    protected $liveEndpoint = 'http://test-services.saanacart.ir';
 
     /**
      * @return string
@@ -36,10 +36,6 @@ abstract class AbstractRequest extends \Omnipay\Common\Message\AbstractRequest
      */
     abstract protected function createResponse(array $data);
 
-    public function getTerminalId(){
-        return $this->getParameter('terminalId');
-    }
-
     public function getAmount(): string
     {
         return $this->getParameter('amount');
@@ -51,46 +47,38 @@ abstract class AbstractRequest extends \Omnipay\Common\Message\AbstractRequest
     }
 
     /**
-     * @param string $value
-     * @return self
+     * @return string
      */
-    public function setTerminalId(string $value): self
+    public function getAgentKey(): string
     {
-        return $this->setParameter('terminalId', $value);
+        return $this->getParameter('agentKey');
+    }
+    public function setAgentKey(string $value): self
+    {
+        return $this->setParameter('agentKey', $value);
     }
 
-    /**
-     * @param string $value
-     */
-    public function setCellNumber(string $value)
-    {
-        return $this->setParameter('CellNumber', $value);
-    }
+
 
     /**
      * @return string
      */
-    public function getCellNumber(): ?string
+    public function getOrderId(): string
     {
-        return $this->getParameter('CellNumber');
+        return $this->getParameter('orderId');
+    }
+    public function setOrderId(string $value): self
+    {
+        return $this->setParameter('orderId', $value);
     }
 
-    /**
-     * @param string $value
-     * @return self
-     */
-    public function setApiKey(string $value): self
+    public function getCallBackUrl(): string
     {
-        return $this->setParameter('apiKey', $value);
+        return $this->getParameter('callbackUrl');
     }
-
-    /**
-     * @param mixed $meta
-     * @return self
-     */
-    public function setMeta(mixed $meta): self
+    public function setCallBackUrl(string $value): self
     {
-        return $this->setParameter('meta', json_encode($meta));
+        return $this->setParameter('callbackUrl', $value);
     }
 
     /**
@@ -99,7 +87,7 @@ abstract class AbstractRequest extends \Omnipay\Common\Message\AbstractRequest
     public function getEndpoint(): string
     {
         if ($this->getTestMode()) {
-            throw new \InvalidArgumentException('Nextpay payment gateway does not support test mode.');
+            throw new \InvalidArgumentException('SanaaCart payment gateway does not support test mode.');
         }
         return $this->liveEndpoint;
     }
@@ -126,7 +114,8 @@ abstract class AbstractRequest extends \Omnipay\Common\Message\AbstractRequest
                 $this->createUri($this->getEndpoint()),
                 [
                     'Accept' => 'application/json',
-                    'Content-type' => 'application/json',
+                    'Content-type' => 'Application/json',
+                    'AgentKey' => $this->getAgentKey(),
                 ],
                 $body
             );

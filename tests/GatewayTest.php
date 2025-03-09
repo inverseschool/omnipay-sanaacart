@@ -1,19 +1,13 @@
 <?php
 
 
-namespace Omnipay\Saman\Tests;
+namespace Omnipay\SanaaCart\Tests;
 
-use Omnipay\Saman\Gateway;
-use Omnipay\Saman\Message\AbstractResponse;
-use Omnipay\Saman\Message\RefundOrderResponse;
-use Omnipay\Saman\Message\VerifyOrderResponse;
-use Omnipay\Tests\GatewayTestCase;
+use Omnipay\SanaaCart\Gateway;
+use Omnipay\SanaaCart\Message\CreateTokenResponse;
+use Omnipay\Tests\TestCase;
 
-/**
- * Class GatewayTest
- * @package Omnipay\ZarinPal\Tests
- */
-class GatewayTest extends GatewayTestCase
+class GatewayTest extends TestCase
 {
 
     /**
@@ -33,7 +27,7 @@ class GatewayTest extends GatewayTestCase
 
         $this->gateway = new Gateway($this->getHttpClient(), $this->getHttpRequest());
 
-        $this->gateway->setTerminalId('xxxxxxxx-xxxx-xxxx-xxxx-xxxxxxxxxxxx');
+        $this->gateway->setAgentKey('ASDSA78ASDAS8DAS798AS7D98A7S9');
     }
 
 
@@ -41,114 +35,18 @@ class GatewayTest extends GatewayTestCase
     {
         $this->setMockHttpResponse('PurchaseSuccess.txt');
 
-        $paramValue= ['terminalId'=>'eee','amount' => '12.00', 'transactionId'=>'1qaz@WSX', 'CellNumber'=>'9120000000'];
+        $paramValue = [
+            'amount' => 1000,
+            'orderId' => '1qaz@WSX',
+            'callbackUrl' => 'http://mysite.com/receipt',
+        ];
 
+        /** @var CreateTokenResponse $response */
         $response = $this->gateway->purchase($paramValue)->send();
-        $responseData=$response->getData();
         self::assertTrue($response->isSuccessful());
         self::assertTrue($response->isRedirect());
-        self::assertEquals('2c3c1fefac5a48geb9f9be7e445dd9b2',$responseData['token']);
-        self::assertEquals('https://sep.shaparak.ir/OnlinePG/SendToken?token=2c3c1fefac5a48geb9f9be7e445dd9b2', $response->getRedirectUrl());
-    }
-
-
-
-
-    public function testPurchaseFailure(): void
-    {
-        $this->setMockHttpResponse('PurchaseFailure.txt');
-
-        $paramValue= ['terminalId'=>'','amount' => '12.00','returnUrl'=>'http://mysite.com/receipt','transactionId'=>'1qaz@WSX','CellNumber'=>'9120000000'];
-        /** @var AbstractResponse $response */
-        $response = $this->gateway->purchase($paramValue)->send();
-        $responseData=$response->getData();
-        self::assertFalse($response->isSuccessful());
-        self::assertFalse($response->isRedirect());
-        self::assertEquals(-1, $responseData['status']);
-        self::assertEquals(5, $responseData['errorCode']);
-        self::assertEquals(".پارامترهای ارسال شده نامعتبر است", $responseData['errorDesc']);
-    }
-
-
-    public function testCompletePurchaseSuccess(): void
-    {
-        $this->setMockHttpResponse('PurchaseCompleteSuccess.txt');
-
-        $param= [
-            'RefNum' => 'jJnBmy/IojtTemplUH5ke9ULCGtDtb',
-            'TerminalNumber' => 2015,
-        ];
-
-        $response = $this->gateway->completePurchase($param)->send();
-
-        $responseData=$response->getData();
-
-        self::assertTrue($response->isSuccessful());
-        self::assertSame("50", $responseData["TransactionDetail"]['RefNum']);
-        self::assertSame(0, $responseData["ResultCode"]);
-        self::assertTrue($responseData["Success"]);
-    }
-
-
-
-    public function testCompletePurchaseFailure(): void
-    {
-        $this->setMockHttpResponse('PurchaseCompleteFailure.txt');
-
-        $param= [
-            'RefNum' => '',
-            'TerminalNumber' => 2015,
-        ];
-
-        /** @var VerifyOrderResponse $response */
-        $response = $this->gateway->completePurchase($param)->send();
-
-        $responseData=$response->getData();
-
-        self::assertFalse($response->isSuccessful());
-        self::assertNotSame('', $responseData["TransactionDetail"]['RefNum']);
-        self::assertEquals(-2, $responseData["ResultCode"]);
-    }
-
-
-
-    public function testRefundSuccess(): void
-    {
-        $this->setMockHttpResponse('PurchaseCompleteSuccess.txt');
-
-        $param= [
-            'RefNum' => 'jJnBmy/IojtTemplUH5ke9ULCGtDtb',
-            'TerminalNumber' => 2015,
-        ];
-
-        /** @var RefundOrderResponse $response */
-        $response = $this->gateway->refund($param)->send();
-
-        $responseData=$response->getData();
-
-        self::assertTrue($response->isSuccessful());
-        self::assertSame("50", $responseData["TransactionDetail"]['RefNum']);
-        self::assertSame(0, $responseData["ResultCode"]);
-        self::assertTrue($responseData["Success"]);
-    }
-
-
-    public function testRefundFailure(): void
-    {
-        $this->setMockHttpResponse('PurchaseCompleteFailure.txt');
-
-        $param= [
-            'RefNum' => '',
-            'TerminalNumber' => 2015,
-        ];
-
-        /** @var RefundOrderResponse $response */
-        $response = $this->gateway->refund($param)->send();
-        $responseData=$response->getData();
-
-        self::assertFalse($response->isSuccessful());
-        self::assertNotSame('', $responseData["TransactionDetail"]['RefNum']);
-        self::assertEquals(-2, $responseData["ResultCode"]);
+        self::assertEquals('259b47f5-c273-4a8a-8a4a-b7e58bbde539',$response->getTransactionReference());
+        self::assertEquals('https://cpg.saanacart.ir/payment/pay/259b47f5-c273-4a8a-8a4a-b7e58bbde539', $response->getRedirectUrl());
     }
 
 }

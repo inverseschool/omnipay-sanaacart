@@ -1,11 +1,10 @@
 <?php
 
-namespace Omnipay\Saman;
+namespace Omnipay\SanaaCart;
 
 use Omnipay\Common\AbstractGateway;
-use Omnipay\Saman\Message\CreateTokenRequest;
-use Omnipay\Saman\Message\RefundOrderRequest;
-use Omnipay\Saman\Message\VerifyOrderRequest;
+use Omnipay\SanaaCart\Message\CreateTokenRequest;
+use Omnipay\SanaaCart\Message\VerifyOrderRequest;
 
 class Gateway extends  AbstractGateway
 {
@@ -18,7 +17,7 @@ class Gateway extends  AbstractGateway
      */
     public function getName(): string
     {
-        return 'Saman';
+        return 'SanaaCart';
     }
 
     /**
@@ -27,7 +26,7 @@ class Gateway extends  AbstractGateway
     public function getDefaultParameters(): array
     {
         return [
-            'terminalId' => '',
+            'agentKey' => '',
         ];
     }
 
@@ -40,14 +39,13 @@ class Gateway extends  AbstractGateway
         return $this;
     }
 
-    public function setTerminalId(string $value)
+    public function getAgentKey(): string
     {
-        return $this->setParameter('terminalId', $value);
+        return $this->getParameter('agentKey');
     }
-
-    public function getTerminalId()
+    public function setAgentKey(string $value): self
     {
-        return $this->getParameter('terminalId');
+        return $this->setParameter('agentKey', $value);
     }
 
     /**
@@ -64,13 +62,5 @@ class Gateway extends  AbstractGateway
     public function completePurchase(array $options = [])
     {
         return $this->createRequest(VerifyOrderRequest::class, $options);
-    }
-
-    /**
-     * @inheritDoc
-     */
-    public function refund(array $options = [])
-    {
-        return $this->createRequest(RefundOrderRequest::class, $options);
     }
 }

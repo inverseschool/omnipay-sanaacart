@@ -1,21 +1,21 @@
 {
-    "name": "inverseschool/omnipay-saman",
+    "name": "inverseschool/omnipay-sanaacart",
     "type": "library",
     "license": "MIT",
     "autoload": {
         "psr-4": {
-            "Omnipay\\Saman\\": "src/"
+            "Omnipay\\SanaaCart\\": "src/"
         }
     },
     "autoload-dev": {
         "psr-4": {
-            "Omnipay\\Saman\\Tests\\": "tests/"
+            "Omnipay\\SanaaCart\\Tests\\": "tests/"
         }
     },
     "authors": [
         {
-            "name": "soheyla.karimzade",
-            "email": "soheyla.karimzade@gmail.com"
+            "name": "amirreza.salari",
+            "email": "amirrezasalari1997@gmail.com"
         }
     ],
     "minimum-stability": "stable",
