@@ -1,6 +1,6 @@
 ## Instalation
 
-    composer require inverseschool/omnipay-saman
+    composer require inverseschool/omnipay-sanaacart
 
 ## Example
 
@@ -9,12 +9,12 @@
 #### The result will be a redirect to the gateway or bank.
 
 ```php
-    $gateway->setTerminalId('xxxxxxxxxxxx');
+    $gateway->setAgentKey('xxxxxxxxxxxx');
    
     $response = $gateway->purchase([
         'amount' => $amount,
-        'transactionId' => 'Merchant-Ref-X',
-        'returnUrl' => 'https://www.example.com/return',
+        'orderId' => 'Merchant-Ref-X',
+        'callbackUrl' => 'https://www.example.com/return',
     ])->send();
 
     // Process response
@@ -47,24 +47,6 @@ Verify an order by `Transaction Reference`:
     } else {
         // Payment was successful
         print_r($response);
-    }
-```
-
-### Refund Order
-
-Refund an order by `Transaction Reference`:
-
-```php
-    $response = $gateway->refund([
-        'transactionReference' => $refNum,
-    ])->send();
-    
-    if ($response->isSuccessful()) {
-        // Refund was successful
-        print_r($response);
-    } else {
-        // Refund failed
-        echo $response->getMessage();
     }
 ```
 
